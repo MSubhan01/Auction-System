@@ -1,0 +1,13 @@
+body {
+  margin: 10px;
+  padding: 0;
+  font-family: sans-serif;
+  text-align: center;
+  /* background-image: url("./BG 2.jpg"); */
+  background-size: 100vw 100vh;
+  background-color: #ffffff;
+  /* height: 97vh; */
+  /* background-size: cover */
+  /* background: #ffffff url("./BG 3.jpg") no-repeat center center; */
+  /* background-repeat: no-repeat; */
+}

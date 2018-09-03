@@ -12,6 +12,15 @@ export default class AuthAction {
     static DATA = "DATA";
     static DATA_SUCCESS = "DATA_SUCCESS";
     static DATA_FAILURE = "DATA_FAILURE";
+    static POST = "POST";
+    static POST_SUCCESS = "POST_SUCCESS";
+    static POST_FAILURE = "POST_FAILURE";
+    static SOLD = "SOLD";
+    static SOLD_SUCCESS = "SOLD_SUCCESS";
+    static SOLD_FAILURE = "SOLD_FAILURE";
+    static BID = "BID";
+    static BID_SUCCESS = "BID_SUCCESS";
+    static BID_FAILURE = "BID_FAILURE";
 
     static signup(payload, history) {
         return {
@@ -45,6 +54,32 @@ export default class AuthAction {
             isLoading: true,
             history,
             user,
+        }
+    }
+
+    static post(Product) {
+        return {
+            type: this.POST,
+            isLoading: true,
+            Product,
+        }
+    }
+
+    static bid(Bid, index) {
+        return {
+            type: this.BID,
+            isLoading: true,
+            index,
+            Bid,
+        }
+    }
+
+
+    static sold(Product) {
+        return {
+            type: this.SOLD,
+            isLoading: true,
+            Product,
         }
     }
 

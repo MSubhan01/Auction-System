@@ -1,39 +1,42 @@
-import { RaisedButton, TextField } from 'material-ui';
+import { Paper, DropDownMenu, MenuItem } from 'material-ui';
 import React, { Component } from 'react';
+import SwipeableViews from 'react-swipeable-views';
+import { Product } from "../index";
 class Bidder extends Component {
   constructor() {
     super();
     this.state = {
-      email: "",
-      password: "",
-      margin: 12,
+      value: 4,
+      open: false,
+      show: false,
+      bidAmount: 0,
+      productAmount: 0,
+      name: "",
+      description: "",
     };
   }
-  signin(e) {
-    e.preventDefault(e);
-    this.props.signin({ Email: this.state.email, Password: this.state.password })
-  }
+  handleOpen = (bidAmount, name, description) => { this.setState({ open: !this.state.open, productAmount: bidAmount - 50, bidAmount, name, description }) };
+  handleChange = (e, value) => { this.setState({ value }) };
   render() {
     return (
-      <div>
-        <form onSubmit={this.signin.bind(this)}>
-          <TextField
-            onChange={(val) => { this.setState({ email: val.target.value }) }}
-            hintText="someone@example.com" floatingLabelText="E-Mail"
-            className="email-in" value={this.state.email}
-          />
-          <br />
-          <TextField
-            type="password" className="password-in" value={this.state.password}
-            onChange={(val) => { this.setState({ password: val.target.value }) }}
-            hintText="Password Field" floatingLabelText="Password"
-          />
-          <br />
-          <RaisedButton
-            primary={true} onClick={this.signin.bind(this)}
-            label="Sign In" style={{ margin: "3px" }}
-          />
-        </form>
+      <div style={{ margin: "1px auto" }}>
+        <DropDownMenu value={this.state.value} onChange={this.handleChange} openImmediately={false} style={{ backgroundColor: "#2d2d2d" }} >
+          <MenuItem value={0} primaryText="Others" />
+          <MenuItem value={1} primaryText="Mobiles" />
+          <MenuItem value={2} primaryText="Refrigerators" />
+          <MenuItem value={3} primaryText="Flat Screens" />
+          <MenuItem value={4} primaryText="LCD's" />
+        </DropDownMenu>
+        <SwipeableViews
+          index={this.state.value}
+          onChangeIndex={this.handleChange}
+        >
+          <div><Product sold={this.props.sold} bid={this.props.bid} Products={this.props.Products} Auth={this.props.Auth} type="Others" /></div>
+          <div><Product sold={this.props.sold} bid={this.props.bid} Products={this.props.Products} Auth={this.props.Auth} type="Mobiles" /></div>
+          <div><Product sold={this.props.sold} bid={this.props.bid} Products={this.props.Products} Auth={this.props.Auth} type="Refrigerators" /></div>
+          <div><Product sold={this.props.sold} bid={this.props.bid} Products={this.props.Products} Auth={this.props.Auth} type="Flat Screens" /></div>
+          <div><Product sold={this.props.sold} bid={this.props.bid} Products={this.props.Products} Auth={this.props.Auth} type="LCD's" /></div>
+        </SwipeableViews>
       </div>
     );
   }

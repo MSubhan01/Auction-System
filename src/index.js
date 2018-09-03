@@ -20,8 +20,8 @@ const muiTheme = getMuiTheme({
         accent1Color: "#ff4081",
         accent2Color: "#303030",
         accent3Color: "#ff80ab",
-        primary1Color: "#3BB1FF",
-        primary2Color: "#3BB1FF",
+        primary1Color: "#ff0000",
+        primary2Color: "#ff0000",
         primary3Color: "#757575",
         canvasColor: "#303030",
         textColor: lime50,
@@ -44,7 +44,7 @@ const muiTheme = getMuiTheme({
 });
 
 ReactDOM.render(
-    <MuiThemeProvider muiTheme={getMuiTheme(muiTheme, )}>
+    <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)}>
         <Provider store={store}>
             <AppRoutes />
         </Provider>

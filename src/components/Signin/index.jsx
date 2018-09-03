@@ -31,7 +31,7 @@ class Signin extends Component {
           <br />
           <RaisedButton
             primary={true} onClick={this.signin.bind(this)}
-            label="Sign In" style={{ margin: "3px" }}
+            label="Sign In" style={{ margin: "3px" }} disabled={this.props.isLoading}
           />
         </form>
       </div>

@@ -16,7 +16,6 @@ import {
 import {
   Auth,
   Dashboard,
-  Admin,
 } from './../container/index';
 
 const mapStateToProps = (state) => {
@@ -53,9 +52,6 @@ class ParentApp extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       setTimeout(() => {
         if (user) {
-          console.log('====================================');
-          console.log(user);
-          console.log('====================================');
           this.props.data(user, this.props.history)
         } else {
           this.props.signout(this.props.history)

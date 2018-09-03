@@ -8,6 +8,9 @@ const EpicMiddleware = (
             Middleware.signin,
             Middleware.signout,
             Middleware.data,
+            Middleware.post,
+            Middleware.bid,
+            Middleware.sold,
         )
     )
 )

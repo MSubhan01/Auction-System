@@ -1,5 +1,5 @@
 import SwipeableViews from 'react-swipeable-views';
-import { Tabs, Tab, Paper } from 'material-ui';
+import { Tabs, Tab, Paper, LinearProgress } from 'material-ui';
 import React, { Component } from 'react';
 import AuthAction from '../../store/actions/AuthAction';
 import { connect } from 'react-redux';
@@ -8,6 +8,7 @@ import { Signin, Signup } from '../../components/index'
 const mapStateToProps = (state) => {
   return {
     Store: state.AuthReducer.auth,
+    isLoading: state.AuthReducer.isLoading,
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -52,16 +53,17 @@ class Auth extends Component {
             <Tab label="Sign In" value={0} />
             <Tab label="Sign Up" value={1} />
           </Tabs>
+          {this.props.isLoading ? <LinearProgress mode="indeterminate" /> : null}
           <SwipeableViews
             index={this.state.value}
             onChangeIndex={this.handleChange}
           >
             <div style={{ padding: 10 }}>
-              <Signin signin={(payload) => { this.props.signin(payload, this.props.history) }} />
+              <Signin isLoading={this.props.isLoading} signin={(payload) => { this.props.signin(payload, this.props.history) }} />
               <div className="button is-primary"></div>
             </div>
             <div style={{ padding: 10 }}>
-              <Signup signup={(payload) => { this.props.signup(payload, this.props.history) }} />
+              <Signup isLoading={this.props.isLoading} signup={(payload) => { this.props.signup(payload, this.props.history) }} />
             </div>
           </SwipeableViews>
         </Paper>

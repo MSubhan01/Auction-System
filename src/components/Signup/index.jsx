@@ -52,7 +52,7 @@ class Signup extends Component {
           <br />
           <RaisedButton
             primary={true} onClick={this.signup.bind(this)}
-            label="Sign Up" style={{ margin: "3px" }}
+            label="Sign Up" style={{ margin: "3px" }} disabled={this.props.isLoading}
           />
         </form>
       </div>

@@ -141,79 +141,133 @@ export default class Middleware {
                     new Promise((res, rej) => {
                         let Auth = { Email: payload.user.email, Name: payload.user.displayName, Uid: payload.user.uid }
                         return firebase.database().ref('/').on("value", (data) => {
-                            let locationKeys = []
-                            let Locations = []
-                            let bookKeys = []
-                            let Bookings = []
-                            let feedbackKeys = []
-                            let Feedbacks = []
-                            let Feedback = []
-                            switch (true) {
-                                case (data.val() && data.val().Locations !== undefined && data.val().Bookings !== undefined):
-                                    locationKeys = Object.keys(data.val().Locations); Locations = Object.values(data.val().Locations); Locations.map((value, index) => value.Key = locationKeys[index])
-                                    bookKeys = Object.keys(data.val().Bookings); Bookings = Object.values(data.val().Bookings); Bookings.map((value, index) => value.Index = bookKeys[index])
-                                    break;
-                                case (data.val() && data.val().Locations !== undefined):
-                                    locationKeys = Object.keys(data.val().Locations); Locations = Object.values(data.val().Locations); Locations.map((value, index) => value.Key = locationKeys[index])
-                                    break;
-                                case (data.val() && data.val().Bookings !== undefined):
-                                    bookKeys = Object.keys(data.val().Bookings); Bookings = Object.values(data.val().Bookings); Bookings.map((value, index) => value.Index = bookKeys[index])
-                                    break;
-                                default:
-                                    console.log("Wrong")
-                                    break;
-                            }
-                            if (payload.user.displayName !== "Admin") {
-                                switch (true) {
-                                    case (data.val() && data.val().Feedback !== undefined):
-                                        feedbackKeys = Object.keys(data.val().Feedback); Feedbacks = Object.values(data.val().Feedback);
-                                        Feedbacks.filter((Feedback) => { console.log(Feedback.Uid === Auth.Uid, Feedback.Uid, Auth.Uid); return Feedback.Uid === Auth.Uid }).map((value, index) => { console.log(value); value.Key = feedbackKeys[index]; Feedback.push(value) })
-                                        console.log(Feedback);
-                                        break;
-                                    default:
-                                        Feedback
-                                        break;
-                                }
-                                payload.history.push("/dashboard")
-                                let me = firebase.auth().currentUser
-                                return data.val().Users === undefined || data.val().Users[Auth.Uid] === undefined
-                                    ? me.delete()
-                                        .then(() => {
-                                            return {
-                                                type: AuthAction.DATA_FAILURE,
-                                                isLoading: false, isError: true, error: "Something Went Wrong"
-                                            }
+                            if (data.val().Users === undefined || data.val().Users[Auth.Uid] === undefined) {
+                                return firebase.auth().signOut()
+                                    .then(() => {
+                                        alert("Please Sign In Again")
+                                        payload.history.push("/")
+                                        return store.dispatch({
+                                            type: AuthAction.SIGNOUT_SUCCESS,
+                                            isLoggedIn: false, isLoading: false, isError: false,
+                                            payload: {
+                                                Name: "", Email: "", Uid: "",
+                                            },
                                         })
-                                        .catch((error) => {
-                                            alert(error.message)
-                                            return {
-                                                type: AuthAction.DATA_FAILURE,
-                                                isLoading: false, isError: true, error: error.message
-                                            }
+                                    })
+                                    .catch((error) => {
+                                        alert(error.message)
+                                        return store.dispatch({
+                                            type: AuthAction.SIGNOUT_FAILURE,
+                                            isError: true, isLoading: false, error: error.message
                                         })
-                                    : store.dispatch({
-                                        type: AuthAction.DATA_SUCCESS,
-                                        isLoading: false, isLoggedIn: true, isError: false,
-                                        Locations, Bookings, Feedback, payload: Auth
                                     })
                             } else {
-                                payload.history.push("/admin")
-                                if (data.val().Feedback) {
-                                    feedbackKeys = Object.keys(data.val().Feedback); Feedbacks = Object.values(data.val().Feedback);
-                                    Feedbacks.map((value, index) => { value.Key = feedbackKeys[index]; Feedback.push(value) })
+                                payload.history.push("/dashboard")
+                                if (data.val().Products !== undefined) {
+                                    let Products = []
+                                    let keys = Object.keys(data.val().Products)
+                                    Object.values(data.val().Products)
+                                        .map((Product, index) => {
+                                            Product.index = keys[index]
+                                            return Products.push(Product)
+                                        })
+                                    return store.dispatch({
+                                        type: AuthAction.DATA_SUCCESS,
+                                        isLoading: false, isLoggedIn: true, isError: false,
+                                        payload: Auth, Products
+                                    })
                                 } else {
-                                    Feedback
+                                    return store.dispatch({
+                                        type: AuthAction.DATA_SUCCESS,
+                                        isLoading: false, isLoggedIn: true, isError: false,
+                                        payload: Auth, Products: []
+                                    })
                                 }
-                                return store.dispatch({
-                                    type: AuthAction.DATA_SUCCESS,
-                                    isLoading: false, isLoggedIn: true, isError: false,
-                                    Locations, Bookings, Feedback, payload: Auth,
-                                    Users: data.val().Users
-                                })
                             }
                         })
                     })
                 )
+            })
+    }
+
+    static post(action$, store) {
+        return action$.ofType(AuthAction.POST)
+            .switchMap((payload) => {
+                let time = new Date(payload.Product.endTime).getTime().toString()
+                let file = payload.Product.file;
+                let storage = firebase.storage().ref('try_out/').child(time);
+                let task = storage.put(file)
+                return task.on('state_changed',
+                    function progress(snapshot) { },
+                    function error(error) {
+                        alert(error)
+                        return {
+                            type: AuthAction.POST_FAILURE,
+                            isLoading: false, isError: true, error
+                        }
+                    },
+                    function complete() {
+                        return storage.getDownloadURL()
+                            .then(function (url) {
+                                return firebase.database().ref("Products").push({ ...payload.Product, url, sold: false, notSold: false, buyer: { Email: "", Name: "", Uid: "", bidAmount: "" } })
+                                    .then(() => {
+                                        alert("Product Posted")
+                                        return {
+                                            type: AuthAction.POST_SUCCESS,
+                                            isLoading: false, isError: false,
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        alert(error)
+                                        return {
+                                            type: AuthAction.POST_FAILURE,
+                                            isLoading: false, isError: true, error
+                                        }
+                                    })
+                            }).catch(function (error) { });
+                    },
+                )
+            })
+    }
+
+    static bid(action$, store) {
+        return action$.ofType(AuthAction.BID)
+            .switchMap((payload) => {
+                return firebase.database().ref(`Products/${payload.index}/Bids`).push(payload.Bid)
+                    .then(() => {
+                        alert("Bid Applied")
+                        return {
+                            type: AuthAction.BID_SUCCESS,
+                            isLoading: false, isError: false,
+                        }
+                    })
+                    .catch((error) => {
+                        alert(error)
+                        return {
+                            type: AuthAction.BID_FAILURE,
+                            isLoading: false, isError: true, error
+                        }
+                    })
+            })
+    }
+
+    static sold(action$, store) {
+        return action$.ofType(AuthAction.SOLD)
+            .switchMap((payload) => {
+                return firebase.database().ref(`Products/${payload.Product.index}`).update({ sold: payload.Product.sold, notSold: payload.Product.notSold, buyer: payload.Product.buyer })
+                    .then(() => {
+                        return {
+                            type: AuthAction.SOLD_SUCCESS,
+                            isLoading: false, isError: false,
+                        }
+                    })
+                    .catch((error) => {
+                        alert(error)
+                        return {
+                            type: AuthAction.SOLD_FAILURE,
+                            isLoading: false, isError: true, error
+                        }
+                    })
             })
     }
 

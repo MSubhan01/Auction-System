@@ -89,24 +89,29 @@ class Product extends Component {
                     float: "left", margin: "10px", wordBreak: "break-all"
                   }}
                 >
-                  <img src={Product.url} alt={Product.url} style={{ height: "155px", margin: "5px", float: "left" }} />
+                  <img src={Product.url} alt={Product.name} style={{ height: "155px", margin: "5px", float: "left" }} />
                   <div style={{ backgroundColor: "white", padding: "6px", margin: "5px", height: "143px", width: "98.5%" }}>
                     <table>
-                      <tr>
-                        <th>Name: </th>
-                        <td>{Product.name}</td>
-                      </tr>
-                      <tr>
-                        <th>Initial Amount: </th>
-                        <td>{Product.bidAmount}</td>
-                      </tr>
-                      {Product.Bids !== undefined
-                        ? <tr>
-                          <th>Highest Bid: </th>
-                          <td> {Object.values(Product.Bids).reverse()[0].bidAmount}</td>
+                      <tbody>
+                        <tr>
+                          <th>Name </th>
+                          <th>:</th>
+                          <td>{this.state.details.name}</td>
                         </tr>
-                        : null
-                      }
+                        <tr>
+                          <th>Initial Amount </th>
+                          <th>:</th>
+                          <td>{this.state.details.bidAmount}</td>
+                        </tr>
+                        {this.state.details.Bids !== undefined
+                          ? <tr>
+                            <th>Highest Bid </th>
+                            <th>:</th>
+                            <td> {Object.values(this.state.details.Bids).reverse()[0].bidAmount}</td>
+                          </tr>
+                          : null
+                        }
+                      </tbody>
                     </table>
                     <RaisedButton
                       label="Details" disabled={false} primary={true}
@@ -132,32 +137,39 @@ class Product extends Component {
                     open={this.state.product}
                     onRequestClose={() => this.setState({ open: false })}
                   >
-                    <img src={this.state.details.url} alt={this.state.details.url} style={{ width: "100%" }} />
+                    <img src={this.state.details.url} alt={this.state.details.name} style={{ width: "100%" }} />
                     <div style={{ backgroundColor: "#303030", padding: "6px" }}>
-                      <table>
-                        <tr>
-                          <th>Name: </th>
-                          <td>{this.state.details.name}</td>
-                        </tr>
-                        <tr>
-                          <th>Description: </th>
-                          <td>{this.state.details.description}</td>
-                        </tr>
-                        <tr>
-                          <th>Active Untill: </th>
-                          <td>{this.state.details.endTime}</td>
-                        </tr>
-                        <tr>
-                          <th>Initial Amount: </th>
-                          <td>{this.state.details.bidAmount}</td>
-                        </tr>
-                        {this.state.details.Bids !== undefined
-                          ? <tr>
-                            <th>Highest Bid: </th>
-                            <td> {Object.values(this.state.details.Bids).reverse()[0].bidAmount}</td>
+                      <table style={{ margin: "auto" }} >
+                        <tbody>
+                          <tr>
+                            <th>Name </th>
+                            <th>:</th>
+                            <td>{this.state.details.name}</td>
                           </tr>
-                          : null
-                        }
+                          <tr>
+                            <th>Description </th>
+                            <th>:</th>
+                            <td>{this.state.details.description}</td>
+                          </tr>
+                          <tr>
+                            <th>Active Untill </th>
+                            <th>:</th>
+                            <td>{this.state.details.endTime}</td>
+                          </tr>
+                          <tr>
+                            <th>Initial Amount </th>
+                            <th>:</th>
+                            <td>{this.state.details.bidAmount}</td>
+                          </tr>
+                          {this.state.details.Bids !== undefined
+                            ? <tr>
+                              <th>Highest Bid </th>
+                              <th>:</th>
+                              <td> {Object.values(this.state.details.Bids).reverse()[0].bidAmount}</td>
+                            </tr>
+                            : null
+                          }
+                        </tbody>
                       </table>
                     </div>
                   </Dialog>

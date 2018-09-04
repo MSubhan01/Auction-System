@@ -11,6 +11,20 @@ class PurchasedProduct extends Component {
       bidAmount: 0,
       bidHigh: 0,
       modalId: '',
+      details: {
+        Uid: "",
+        bidAmount: "",
+        buyer: { Email: "", Name: "", Uid: "", bidAmount: "" },
+        catogary: "",
+        description: "",
+        endTime: "",
+        index: "-",
+        name: "",
+        notSold: false,
+        sold: true,
+        url: "",
+        user: "",
+      },
       Auth: {
         Name: "",
         Email: "",
@@ -41,25 +55,30 @@ class PurchasedProduct extends Component {
                     float: "left", margin: "10px", wordBreak: "break-all"
                   }}
                 >
-                  <img src={Product.url} alt={Product.url} style={{ height: "155px", margin: "5px", float: "left" }} />
+                  <img src={Product.url} alt={Product.name} style={{ height: "155px", margin: "5px", float: "left" }} />
                   <div style={{ backgroundColor: "white", padding: "6px", margin: "5px", height: "143px", width: "98.5%" }}>
                     <table>
-                      <tr>
-                        <th>Name: </th>
-                        <td>{Product.name}</td>
-                      </tr>
-                      <tr>
-                        <th>Initial Amount: </th>
-                        <td>{Product.bidAmount}</td>
-                      </tr>
-                      <tr>
-                        <th>Purchase Amount: </th>
-                        <td>{Product.buyer.bidAmount}</td>
-                      </tr>
+                      <tbody>
+                        <tr>
+                          <th>Name </th>
+                          <th>:</th>
+                          <td>{this.state.details.name}</td>
+                        </tr>
+                        <tr>
+                          <th>Initial Amount </th>
+                          <th>:</th>
+                          <td>{this.state.details.bidAmount}</td>
+                        </tr>
+                        <tr>
+                          <th>Purchase Amount</th>
+                          <th>: </th>
+                          <td>{Product.buyer.bidAmount}</td>
+                        </tr>
+                      </tbody>
                     </table>
                     <RaisedButton
                       label="Details" primary={true} style={{ float: "right", margin: "39px 6px 6px 3px" }}
-                      onClick={() => this.setState({ product: true })}
+                      onClick={() => this.setState({ product: true, details: Product })}
                     />
                     <RaisedButton
                       label="Purchased" disabled={true} primary={true}
@@ -80,33 +99,41 @@ class PurchasedProduct extends Component {
                     open={this.state.product}
                     onRequestClose={() => this.setState({ open: false })}
                   >
-                    <img src={Product.url} alt={Product.url} style={{ width: "100%" }} />
+                    <img src={this.state.details.url} alt={this.state.details.name} style={{ width: "100%" }} />
                     <div style={{ backgroundColor: "#303030", padding: "6px" }}>
-                      <table>
-                        <tr>
-                          <th>Name: </th>
-                          <td>{Product.name}</td>
-                        </tr>
-                        <tr>
-                          <th>Catogary: </th>
-                          <td>{Product.catogary}</td>
-                        </tr>
-                        <tr>
-                          <th>Description: </th>
-                          <td>{Product.description}</td>
-                        </tr>
-                        <tr>
-                          <th>Ended On: </th>
-                          <td>{Product.endTime}</td>
-                        </tr>
-                        <tr>
-                          <th>Initial Amount: </th>
-                          <td>{Product.bidAmount}</td>
-                        </tr>
-                        <tr>
-                          <th>Purchase Amount: </th>
-                          <td> {Product.buyer.bidAmount}</td>
-                        </tr>
+                      <table style={{ margin: "auto" }} >
+                        <tbody>
+                          <tr>
+                            <th>Name </th>
+                            <th>:</th>
+                            <td>{this.state.details.name}</td>
+                          </tr>
+                          <tr>
+                            <th>Catogary </th>
+                            <th>:</th>
+                            <td>{this.state.details.catogary}</td>
+                          </tr>
+                          <tr>
+                            <th>Description </th>
+                            <th>:</th>
+                            <td>{this.state.details.description}</td>
+                          </tr>
+                          <tr>
+                            <th>Ended On </th>
+                            <th>:</th>
+                            <td>{this.state.details.endTime}</td>
+                          </tr>
+                          <tr>
+                            <th>Initial Amount </th>
+                            <th>:</th>
+                            <td>{this.state.details.bidAmount}</td>
+                          </tr>
+                          <tr>
+                            <th>Purchase Amount </th>
+                            <th>:</th>
+                            <td> {this.state.details.buyer.bidAmount}</td>
+                          </tr>
+                        </tbody>
                       </table>
                     </div>
                   </Dialog>

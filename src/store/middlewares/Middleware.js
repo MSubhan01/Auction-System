@@ -203,12 +203,12 @@ export default class Middleware {
                         alert(error)
                         return {
                             type: AuthAction.POST_FAILURE,
-                            isLoading: false, isError: true, error
+                            isLoading: false, isError: true, error: error.message
                         }
                     },
                     function complete() {
                         return storage.getDownloadURL()
-                            .then(function (url) {
+                            .then((url) => {
                                 return firebase.database().ref("Products").push({ ...payload.Product, url, sold: false, notSold: false, buyer: { Email: "", Name: "", Uid: "", bidAmount: "" } })
                                     .then(() => {
                                         alert("Product Posted")
@@ -218,13 +218,19 @@ export default class Middleware {
                                         }
                                     })
                                     .catch((error) => {
-                                        alert(error)
+                                        alert(error.message)
                                         return {
                                             type: AuthAction.POST_FAILURE,
-                                            isLoading: false, isError: true, error
+                                            isLoading: false, isError: true, error: error.message
                                         }
                                     })
-                            }).catch(function (error) { });
+                            }).catch((error) => {
+                                alert(error.message)
+                                return {
+                                    type: AuthAction.POST_FAILURE,
+                                    isLoading: false, isError: true, error: error.message
+                                }
+                            });
                     },
                 )
             })
@@ -245,7 +251,7 @@ export default class Middleware {
                         alert(error)
                         return {
                             type: AuthAction.BID_FAILURE,
-                            isLoading: false, isError: true, error
+                            isLoading: false, isError: true, error: error.message
                         }
                     })
             })
@@ -265,7 +271,7 @@ export default class Middleware {
                         alert(error)
                         return {
                             type: AuthAction.SOLD_FAILURE,
-                            isLoading: false, isError: true, error
+                            isLoading: false, isError: true, error: error.message
                         }
                     })
             })

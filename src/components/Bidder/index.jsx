@@ -1,4 +1,4 @@
-import { Paper, DropDownMenu, MenuItem } from 'material-ui';
+import { DropDownMenu, MenuItem } from 'material-ui';
 import React, { Component } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { Product } from "../index";
@@ -6,7 +6,7 @@ class Bidder extends Component {
   constructor() {
     super();
     this.state = {
-      value: 4,
+      value: 0,
       open: false,
       show: false,
       bidAmount: 0,

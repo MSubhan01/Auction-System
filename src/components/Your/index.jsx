@@ -1,4 +1,3 @@
-import { Paper } from 'material-ui';
 import React, { Component } from 'react';
 import { YourProduct } from "../index";
 class Your extends Component {
